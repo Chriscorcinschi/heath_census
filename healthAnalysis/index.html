@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Health Analysis Data</title>
+		<link rel="stylesheet" href="./health_analysis.css" />
+	</head>
+	<body>
+		<nav>
+			<div class="nav-container">
+				<a href="./index.html"><h1>🏥 Health Analysis Census</h1></a>
+				<ul class="nav-links">
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./health_contact.html">Contact Us</a></li>
+					<li class="search-container">
+						<input
+							type="text"
+							id="conditionInput"
+							placeholder="Enter a health condition..."
+						/>
+						<button id="btnSearch">Search</button>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="card">
+				<h2>📋 Add Patient</h2>
+				<form id="patientForm">
+					<div class="form-group">
+						<label for="name">Name:</label>
+						<input type="text" id="name" placeholder="e.g. John Smith" />
+						<span class="error-message">Name is required</span>
+					</div>
+
+					<div class="form-group">
+						<label>Gender:</label>
+						<div class="radio-group">
+							<label class="radio-label">
+								<input type="radio" name="gender" id="male" value="Male" />
+								<span>Male</span>
+							</label>
+							<label class="radio-label">
+								<input type="radio" name="gender" id="female" value="Female" />
+								<span>Female</span>
+							</label>
+						</div>
+						<span class="error-message">Please select a gender</span>
+					</div>
+
+					<div class="form-group">
+						<label for="age">Age:</label>
+						<input type="number" id="age" placeholder="e.g. 45" min="0" max="120" />
+						<span class="error-message">Please enter a valid age (0-120)</span>
+					</div>
+
+					<div class="form-group">
+						<label for="condition">Condition:</label>
+						<select id="condition">
+							<option value="">Select condition</option>
+							<option value="Diabetes">Diabetes</option>
+							<option value="Thyroid">Thyroid</option>
+							<option value="High Blood Pressure">High Blood Pressure</option>
+						</select>
+						<span class="error-message">Please select a condition</span>
+					</div>
+
+					<button type="submit" id="addPatient">➕ Add Patient</button>
+				</form>
+
+				<h2 style="margin-top: 2rem">📊 Analysis Report</h2>
+				<div id="report">
+					<div class="empty-state">
+						<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+							/>
+						</svg>
+						<p>No data available. Add your first patient!</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<h2>🔍 Search Results</h2>
+				<div id="result">
+					<div class="empty-state">
+						<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+							/>
+						</svg>
+						<p>Search for a health condition to view details</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="./health_analysis.js"></script>
+	</body>
+</html>

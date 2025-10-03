@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Contact Us - Health Analysis Census</title>
+		<link rel="stylesheet" href="./health_analysis.css" />
+	</head>
+	<body>
+		<nav>
+			<div class="nav-container">
+				<a href="./index.html"><h1>🏥 Health Analysis Census</h1></a>
+				<ul class="nav-links">
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./health_contact.html">Contact Us</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container single-column">
+			<div class="card">
+				<h2>📧 Contact Us</h2>
+				<p style="color: var(--text-secondary); margin-bottom: 2rem">
+					Feel free to contact us to learn more about your conditions and treatment methods.
+				</p>
+
+				<form id="contactForm">
+					<div class="form-group">
+						<label for="contactName">Name:</label>
+						<input
+							type="text"
+							id="contactName"
+							name="name"
+							placeholder="e.g. John Smith"
+							required
+						/>
+						<span class="error-message">Name is required</span>
+					</div>
+
+					<div class="form-group">
+						<label for="contactEmail">Email:</label>
+						<input
+							type="email"
+							id="contactEmail"
+							name="email"
+							placeholder="e.g. john@example.com"
+							required
+						/>
+						<span class="error-message">Please enter a valid email</span>
+					</div>
+
+					<div class="form-group">
+						<label for="contactCondition">Condition:</label>
+						<select id="contactCondition" name="condition" required>
+							<option value="">Select condition</option>
+							<option value="Diabetes">Diabetes</option>
+							<option value="Thyroid">Thyroid</option>
+							<option value="High Blood Pressure">High Blood Pressure</option>
+							<option value="Other">Other</option>
+						</select>
+						<span class="error-message">Please select a condition</span>
+					</div>
+
+					<div class="form-group">
+						<label for="contactMessage">Message:</label>
+						<textarea
+							id="contactMessage"
+							name="message"
+							rows="5"
+							placeholder="Tell us about your inquiry..."
+							required
+						></textarea>
+						<span class="error-message">Message is required</span>
+					</div>
+
+					<button type="submit">📤 Send Message</button>
+				</form>
+
+				<div id="contactSuccess" class="contact-success">
+					<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<h3>Thank you for contacting us!</h3>
+					<p>We'll get back to you as soon as possible.</p>
+				</div>
+			</div>
+		</div>
+
+		<script src="health_analysis.js"></script>
+	</body>
+</html>
