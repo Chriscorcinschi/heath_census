@@ -6,6 +6,11 @@ const patientConditionSelect = document.getElementById("condition");
 const addPatientButton = document.getElementById("addPatient");
 const reportDiv = document.getElementById("report");
 
+// Search elements
+const searchButton = document.getElementById("btnSearch");
+const searchResultDiv = document.getElementById("result");
+const conditionInput = document.getElementById("conditionInput");
+
 /**
  * Array to store all patient records
  * Each patient object contains: { name, gender, age, condition }
@@ -272,4 +277,118 @@ const generateReport = () => {
 			})
 			.join("")}
 	`;
+};
+
+// ============================================================================
+// SEARCH FUNCTIONALITY
+// ============================================================================
+/**
+ * Fetches data from JSON file and displays condition details
+ */
+
+const searchCondition = async () => {
+	// Get search input value
+	const searchQuery = getValue("conditionInput").toLowerCase();
+
+	// Validate search input
+	if (!searchQuery) {
+		showToast("Please enter a condition to search", true);
+		return;
+	}
+
+	// Show loading state
+	searchResultDiv.innerHTML = `
+		<div style="text-align: center; padding: 2rem;">
+			<div class="loading"></div>
+			<p style="margin-top: 1rem;">Loading...</p>
+		</div>
+	`;
+
+	try {
+		// Fetch condition data from JSON file
+		const response = await fetch("health_analysis.json");
+
+		// Check if request was successful
+		if (!response.ok) {
+			throw new Error("Error loading data");
+		}
+
+		// Parse JSON response
+		const data = await response.json();
+
+		// Find matching condition (case-insensitive)
+		const condition = data.conditions.find((item) => item.name.toLowerCase() === searchQuery);
+
+		// Handle condition not found
+		if (!condition) {
+			searchResultDiv.innerHTML = `
+				<div class="empty-state">
+					<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+							d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<p>Condition not found. Try: diabetes, thyroid, high blood pressure</p>
+				</div>
+			`;
+			return;
+		}
+
+		// Extract condition details
+		const { name, symptoms, prevention, treatment, imagesrc } = condition;
+
+		// Display condition information
+		searchResultDiv.innerHTML = `
+			<h3>${name}</h3>
+			${imagesrc ? `<img src="${imagesrc}" alt="${name}" onerror="this.style.display='none'">` : ""}
+			
+			<div class="info-section">
+				<strong>🩺 Symptoms:</strong>
+				<p>${symptoms.join(", ")}</p>
+			</div>
+			
+			<div class="info-section">
+				<strong>🛡️ Prevention:</strong>
+				<p>${prevention.join(", ")}</p>
+			</div>
+			
+			<div class="info-section">
+				<strong>💊 Treatment:</strong>
+				<p>${treatment}</p>
+			</div>
+		`;
+	} catch (error) {
+		// Handle fetch errors
+		console.error("Error fetching condition data:", error);
+
+		searchResultDiv.innerHTML = `
+			<div class="empty-state">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+						d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<p style="color: var(--danger);">Error loading data. Please check that the JSON file exists.</p>
+			</div>
+		`;
+
+		showToast("Error loading data", true);
+	}
+};
+
+/**
+ * Initialize search functionality event listeners
+ */
+const initializeSearchListeners = () => {
+	// Search button click
+	if (searchButton) {
+		searchButton.addEventListener("click", searchCondition);
+	}
+
+	// Search on Enter key press
+	if (conditionInput) {
+		conditionInput.addEventListener("keypress", (e) => {
+			if (e.key === "Enter") {
+				searchCondition();
+			}
+		});
+	}
 };
