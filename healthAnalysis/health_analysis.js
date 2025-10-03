@@ -11,6 +11,10 @@ const searchButton = document.getElementById("btnSearch");
 const searchResultDiv = document.getElementById("result");
 const conditionInput = document.getElementById("conditionInput");
 
+// Contact form elements
+const contactForm = document.getElementById("contactForm");
+const contactSuccess = document.getElementById("contactSuccess");
+
 /**
  * Array to store all patient records
  * Each patient object contains: { name, gender, age, condition }
@@ -391,4 +395,112 @@ const initializeSearchListeners = () => {
 			}
 		});
 	}
+};
+
+// ============================================================================
+// CONTACT FORM
+// ============================================================================
+
+/**
+ * Validate the contact form inputs
+ * Checks: name, email (format), condition, and message
+ * @returns {boolean} - True if all fields are valid, false otherwise
+ */
+const validateContactForm = () => {
+	// Only run if contact form exists (contact page only)
+	if (!contactForm) return false;
+
+	let isValid = true;
+	const fields = ["contactName", "contactEmail", "contactCondition", "contactMessage"];
+
+	// Email validation regex pattern
+	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	fields.forEach((fieldId) => {
+		const element = document.getElementById(fieldId);
+		if (!element) return; // Skip if element doesn't exist
+
+		const group = element.closest(".form-group");
+
+		// Check if field is empty
+		if (!element.value.trim()) {
+			group.classList.add("error");
+			isValid = false;
+		}
+		// Special validation for email format
+		else if (fieldId === "contactEmail" && !emailPattern.test(element.value)) {
+			group.classList.add("error");
+			isValid = false;
+		}
+		// Field is valid
+		else {
+			group.classList.remove("error");
+		}
+	});
+
+	return isValid;
+};
+
+/**
+ * Handle contact form submission
+ * Validates form, shows success message, and resets after delay
+ * @param {Event} e - The form submit event
+ */
+const handleContactFormSubmit = (e) => {
+	// Only run if contact form exists
+	if (!contactForm) return;
+
+	// Prevent default form submission
+	e.preventDefault();
+
+	// Validate form before processing
+	if (!validateContactForm()) {
+		showToast("Please fill in all fields correctly", true);
+		return;
+	}
+
+	// Hide form and show success message
+	contactForm.style.display = "none";
+	contactSuccess.classList.add("show");
+	showToast("Message sent successfully! ✓");
+
+	// Reset form after 5 seconds
+	setTimeout(() => {
+		contactForm.reset();
+		contactForm.style.display = "block";
+		contactSuccess.classList.remove("show");
+
+		// Remove all error states
+		document.querySelectorAll(".form-group").forEach((group) => {
+			group.classList.remove("error");
+		});
+	}, 5000);
+};
+
+/**
+ * Initialize contact form event listeners
+ */
+const initializeContactFormListeners = () => {
+	if (contactForm) {
+		contactForm.addEventListener("submit", handleContactFormSubmit);
+	}
+};
+
+// ============================================================================
+// FORM VALIDATION
+// ============================================================================
+
+/**
+ * Initialize form validation listeners for real-time error removal
+ */
+const initializeFormValidationListeners = () => {
+	// Remove error state on input change (all forms)
+	document.querySelectorAll("input, select, textarea").forEach((element) => {
+		element.addEventListener("input", () => {
+			const formGroup = element.closest(".form-group");
+			if (formGroup) {
+				formGroup.classList.remove("error");
+			}
+		});
+	});
 };
