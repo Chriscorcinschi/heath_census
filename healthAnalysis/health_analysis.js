@@ -57,7 +57,7 @@ const showToast = (message, isError = false) => {
 	}, 3000);
 };
 
-============================================================================
+//============================================================================
 // PATIENT FORM MANAGEMENT
 // ============================================================================
 
@@ -167,4 +167,109 @@ const initializePatientFormListeners = () => {
 	if (patientForm) {
 		patientForm.addEventListener("submit", addPatient);
 	}
+};
+
+// ============================================================================
+// REPORT GENERATION
+// ============================================================================
+/* Generate and display the patient analysis report
+ * Shows: total patients, condition breakdown chart, and gender-based statistics
+ */
+
+const generateReport = () => {
+	const numPatients = patients.length;
+
+	// Show empty state if no patients exist
+	if (numPatients === 0) {
+		reportDiv.innerHTML = `
+			<div class="empty-state">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+				</svg>
+				<p>No data available. Add your first patient!</p>
+			</div>
+		`;
+		return;
+	}
+
+	// Define available conditions and genders
+	const conditions = ["Diabetes", "Thyroid", "High Blood Pressure"];
+	const genders = ["Male", "Female"];
+
+	// Initialize counters for conditions
+	const conditionsCount = {};
+	conditions.forEach((condition) => {
+		conditionsCount[condition] = 0;
+	});
+
+	// Initialize counters for gender-based conditions
+	const genderConditionsCount = {};
+	genders.forEach((gender) => {
+		genderConditionsCount[gender] = {};
+		conditions.forEach((condition) => {
+			genderConditionsCount[gender][condition] = 0;
+		});
+	});
+
+	// Count occurrences of each condition and gender-condition combination
+	patients.forEach(({ gender, condition }) => {
+		conditionsCount[condition]++;
+		genderConditionsCount[gender][condition]++;
+	});
+
+	// Find maximum count for chart scaling
+	const conditionValues = Object.values(conditionsCount);
+	const maxCount = Math.max.apply(Math, conditionValues);
+
+	// Generate HTML for the report
+	reportDiv.innerHTML = `
+		<p><strong>Number of patients:</strong> <span class="stat-badge">${numPatients}</span></p>
+		
+		<!-- Conditions Breakdown Chart -->
+		<div class="chart-container">
+			<h3>📈 Conditions Breakdown</h3>
+			${conditions
+				.map((condition) => {
+					const count = conditionsCount[condition];
+					const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+
+					return `
+						<div class="chart-bar">
+							<div class="chart-label">${condition}</div>
+							<div class="chart-bar-container">
+								<div class="chart-bar-fill" style="width: ${percentage}%">
+									${count}
+								</div>
+							</div>
+						</div>
+					`;
+				})
+				.join("")}
+		</div>
+
+		<!-- Gender-Based Statistics -->
+		<h3>👥 Gender-Based Conditions</h3>
+		${genders
+			.map((gender) => {
+				return `
+					<div style="margin-bottom: 1.5rem;">
+						<strong style="color: var(--primary);">${gender}:</strong>
+						<div style="margin-left: 1rem; margin-top: 0.5rem;">
+							${conditions
+								.map((condition) => {
+									const count = genderConditionsCount[gender][condition];
+									return `
+										<div style="margin-bottom: 0.5rem;">
+											${condition}: <strong>${count}</strong>
+										</div>
+									`;
+								})
+								.join("")}
+						</div>
+					</div>
+				`;
+			})
+			.join("")}
+	`;
 };
