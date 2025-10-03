@@ -504,3 +504,38 @@ const initializeFormValidationListeners = () => {
 		});
 	});
 };
+
+// ============================================================================
+// EVENT LISTENERS SETUP
+// ===========================================================================
+const initializeEventListeners = () => {
+	initializePatientFormListeners();
+	initializeSearchListeners();
+	initializeContactFormListeners();
+	initializeFormValidationListeners();
+};
+
+// ============================================================================
+// APPLICATION INITIALIZATION
+// Initialize the application when DOM is ready
+// ============================================================================
+
+const initializeApp = () => {
+	// Set up all event listeners
+	initializeEventListeners();
+
+	// Generate initial empty report (only on home page)
+	if (reportDiv) {
+		generateReport();
+	}
+
+	console.log("Health Analysis Application initialized successfully! 🏥");
+};
+
+// Run initialization when DOM is fully loaded
+if (document.readyState === "loading") {
+	document.addEventListener("DOMContentLoaded", initializeApp);
+} else {
+	// DOM is already loaded
+	initializeApp();
+}
